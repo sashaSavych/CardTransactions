@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "The system to display all transactional data",
   "main": "index.js",
+  "engines": {
+    "node": "10.0.0"
+  },
   "scripts": {
-    "start": "node index.js"
+    "dev": "nodemon index",
+    "start": "node index"
   },
   "keywords": [
     "nodejs",
@@ -12,5 +16,13 @@
     "angular9"
   ],
   "author": "Oleksandr Savych",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "csv-parser": "^2.3.3",
+    "express": "^4.17.1",
+    "mongodb": "^3.5.9"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
 }
