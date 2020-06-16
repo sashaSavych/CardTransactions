@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TransactionsService } from '../../services/transactions.service';
 
 @Component({
   selector: 'app-upload-file',
@@ -7,12 +8,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UploadFileComponent implements OnInit {
 
-  constructor() { }
+  constructor(private transactionsService: TransactionsService) { }
 
   ngOnInit(): void {
   }
 
   fileChanged(event: Event) {
-    console.log(event);
+    const fileToUpload: File =  event.target['files'][0];
+
+    this.transactionsService.uploadFile(fileToUpload);
   }
 }

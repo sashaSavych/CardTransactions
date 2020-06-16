@@ -5,6 +5,7 @@ import { AppComponent } from './app.component';
 import { TransactionListComponent } from './components/transaction-list/transaction-list.component';
 import { InfoWidgetComponent } from './components/info-widget/info-widget.component';
 import { UploadFileComponent } from './components/upload-file/upload-file.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { UploadFileComponent } from './components/upload-file/upload-file.compon
     UploadFileComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]
