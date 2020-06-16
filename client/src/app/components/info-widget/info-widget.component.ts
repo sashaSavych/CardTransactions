@@ -7,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class InfoWidgetComponent implements OnInit {
   @Input() caption: string;
-  @Input() content: string;
+  @Input() content: number | string;
 
   constructor() { }
 

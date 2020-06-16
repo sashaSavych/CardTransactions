@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { TransactionsService } from '../../services/transactions.service';
 
 @Component({
@@ -6,15 +6,14 @@ import { TransactionsService } from '../../services/transactions.service';
   templateUrl: './upload-file.component.html',
   styleUrls: ['./upload-file.component.scss']
 })
-export class UploadFileComponent implements OnInit {
+export class UploadFileComponent {
+  @ViewChild('fileInput') fileInput: ElementRef<any>;
 
   constructor(private transactionsService: TransactionsService) { }
 
-  ngOnInit(): void {
-  }
-
   fileChanged(event: Event) {
     const fileToUpload: File =  event.target['files'][0];
+    this.fileInput.nativeElement.value = null;
 
     this.transactionsService.uploadFile(fileToUpload);
   }
