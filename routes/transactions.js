@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.get('/all', controller.getAll);
 router.post('/save', controller.save);
-router.delete('/remove', controller.removeById);
+router.delete('/remove/:id', controller.removeById);
 
 module.exports = router;

@@ -7,8 +7,9 @@ const { dbName, collectionName } = require('../config');
 const { composeResponseMessage, getMongoClient } = require('../utils');
 
 const getAll = async (req, res) => {
+    const client = getMongoClient();
+
     try {
-        const client = getMongoClient();
         await client.connect();
         const db = client.db(dbName);
         const transactions = db.collection(collectionName).find();
@@ -22,6 +23,8 @@ const getAll = async (req, res) => {
 };
 
 const save = async (req, res) => {
+    const client = getMongoClient();
+
     try {
         const transactions = [];
 
@@ -29,7 +32,6 @@ const save = async (req, res) => {
             .pipe(csvParser())
             .on('data', (data) => transactions.push(data))
             .on('end', async () => {
-                const client = getMongoClient();
                 await client.connect();
                 const db = client.db(dbName);
                 await db.collection(collectionName).insertMany(transactions);
@@ -45,12 +47,13 @@ const save = async (req, res) => {
 };
 
 const removeById = async (req, res) => {
+    const client = getMongoClient();
+
     try {
-        const { itemId } = req;
-        const client = getMongoClient();
+        const { id } = req.params;
         await client.connect();
         const db = client.db(dbName);
-        await db.collection(collectionName).deleteOne({ _id: ObjectId(itemId) });
+        await db.collection(collectionName).deleteOne({ _id: ObjectId(id) });
 
         res.status(200).json(composeResponseMessage('The transaction has been successfully removed'));
     } catch (e) {

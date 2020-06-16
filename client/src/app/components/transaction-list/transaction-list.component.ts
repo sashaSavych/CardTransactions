@@ -12,6 +12,7 @@ export class TransactionListComponent implements OnInit {
   constructor(private transactionsService: TransactionsService) { }
 
   ngOnInit(): void {
+    this.transactionsService.getAll();
   }
 
   removeItem(id: string): void {
