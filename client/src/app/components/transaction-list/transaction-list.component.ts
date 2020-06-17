@@ -1,21 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { TransactionsService } from '../../services/transactions.service';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Transaction } from '../../models/interfaces';
 
 @Component({
   selector: 'app-transaction-list',
   templateUrl: './transaction-list.component.html',
   styleUrls: ['./transaction-list.component.scss']
 })
-export class TransactionListComponent implements OnInit {
-  readonly transactions$ = this.transactionsService.transactions$;
-
-  constructor(private transactionsService: TransactionsService) { }
-
-  ngOnInit(): void {
-    this.transactionsService.getAll();
-  }
-
-  removeItem(id: string): void {
-    this.transactionsService.removeById(id);
-  }
+export class TransactionListComponent {
+  @Input() transactions: Transaction[] = [];
+  @Output() removeById = new EventEmitter<string>();
 }

@@ -5,6 +5,7 @@ const path = require('path');
 
 const { dbName, collectionName } = require('../config');
 const { composeResponseMessage, getMongoClient } = require('../utils');
+const filePath = path.resolve(__dirname, '../transactions.csv');
 
 const getAll = async (req, res) => {
     const client = getMongoClient();
@@ -28,7 +29,7 @@ const save = async (req, res) => {
     try {
         const transactions = [];
 
-        fs.createReadStream(path.resolve(__dirname, '../data.csv'))
+        fs.createReadStream(filePath)
             .pipe(csvParser())
             .on('data', (data) => transactions.push(data))
             .on('end', async () => {
@@ -43,6 +44,7 @@ const save = async (req, res) => {
         res.status(500).json(composeResponseMessage('Error during saving of transactions'));
     } finally {
         await client.close();
+        fs.unlink(filePath, () => {});
     }
 };
 

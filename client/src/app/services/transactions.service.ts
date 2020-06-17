@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Transaction } from '../models/interfaces';
 
 @Injectable({
@@ -12,21 +12,24 @@ export class TransactionsService {
 
   constructor(private httClient: HttpClient) { }
 
-  getAll(): void {
+  loadAll(): void {
     this.httClient.get<Transaction[]>(`${this.baseUrl}all`)
       .subscribe(transactions => this.transactions$.next(transactions));
   }
 
   uploadFile(fileToUpload: File): void {
+    const headers: HttpHeaders = new HttpHeaders();
+    headers.append('Content-type', 'multipart/form-data');
+
     const formData: FormData = new FormData();
     formData.append('transactionsFile', fileToUpload, fileToUpload.name);
 
-    this.httClient.post(`${this.baseUrl}save`, formData)
-      .subscribe(() => this.getAll());
+    this.httClient.post(`${this.baseUrl}save`, formData, { headers })
+      .subscribe(() => this.loadAll());
   }
 
   removeById(id: string): void {
     this.httClient.delete(`${this.baseUrl}remove/${id}`)
-      .subscribe(() => this.getAll());
+      .subscribe(() => this.loadAll());
   }
 }

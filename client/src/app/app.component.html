@@ -25,6 +25,14 @@
     </div>
   </aside>
   <main class="col s9">
-    <app-transaction-list></app-transaction-list>
+    <app-transaction-list
+      *ngIf="totalNumber; else emptyList"
+      [transactions]="transactions"
+      (removeById)="removeItem($event)">
+    </app-transaction-list>
   </main>
 </div>
+
+<ng-template #emptyList>
+  <p>There is no records yet. Please upload CSV file to import transactions.</p>
+</ng-template>
