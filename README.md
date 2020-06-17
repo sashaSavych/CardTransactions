@@ -56,5 +56,4 @@ This project was based on following tools: Angular, NodeJs and MongoDB. Addition
 + Rewrite usage of MongoDB - from local to cloud (MongoDB Atlas)
 + Extend functionality with 
     - user authorization
-    - user notifications (error/success)
-
+    - update function for a transaction

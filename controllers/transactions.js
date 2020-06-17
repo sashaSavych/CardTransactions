@@ -18,6 +18,7 @@ const getAll = async (req, res) => {
         res.status(200).json(await transactions.toArray());
     } catch (e) {
         console.error(e);
+        res.status(500).json(composeResponseMessage('Error during retrieving of transactions'));
     } finally {
         await client.close();
     }
@@ -60,6 +61,7 @@ const removeById = async (req, res) => {
         res.status(200).json(composeResponseMessage('The transaction has been successfully removed'));
     } catch (e) {
         console.error(e);
+        res.status(500).json(composeResponseMessage('Error during deleting of transaction'));
     } finally {
         await client.close();
     }

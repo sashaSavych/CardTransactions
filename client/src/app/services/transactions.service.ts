@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Transaction } from '../models/interfaces';
+import { MaterializeService } from './materialize.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,9 @@ export class TransactionsService {
 
   loadAll(): void {
     this.httClient.get<Transaction[]>(`${this.baseUrl}all`)
-      .subscribe(transactions => this.transactions$.next(transactions));
+      .subscribe(
+        transactions => this.transactions$.next(transactions),
+        error => MaterializeService.showToastMessage(this.retrieveErrorMessage(error)));
   }
 
   uploadFile(fileToUpload: File): void {
@@ -25,11 +28,19 @@ export class TransactionsService {
     formData.append('transactionsFile', fileToUpload, fileToUpload.name);
 
     this.httClient.post(`${this.baseUrl}save`, formData, { headers })
-      .subscribe(() => this.loadAll());
+      .subscribe(
+        () => this.loadAll(),
+        error => MaterializeService.showToastMessage(this.retrieveErrorMessage(error)));
   }
 
   removeById(id: string): void {
     this.httClient.delete(`${this.baseUrl}remove/${id}`)
-      .subscribe(() => this.loadAll());
+      .subscribe(
+        () => this.loadAll(),
+        error => MaterializeService.showToastMessage(this.retrieveErrorMessage(error)));
+  }
+
+  private retrieveErrorMessage(error: HttpErrorResponse): string {
+    return error.error.message || error.message;
   }
 }
