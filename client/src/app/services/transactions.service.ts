@@ -14,7 +14,7 @@ export class TransactionsService {
   constructor(private httClient: HttpClient) { }
 
   loadAll(): void {
-    this.httClient.get<Transaction[]>(`${this.baseUrl}all`)
+    this.httClient.get<Transaction[]>(this.baseUrl)
       .subscribe(
         transactions => this.transactions$.next(transactions),
         error => MaterializeService.showToastMessage(this.retrieveErrorMessage(error)));
@@ -27,14 +27,14 @@ export class TransactionsService {
     const formData: FormData = new FormData();
     formData.append('transactionsFile', fileToUpload, fileToUpload.name);
 
-    this.httClient.post(`${this.baseUrl}save`, formData, { headers })
+    this.httClient.post(this.baseUrl, formData, { headers })
       .subscribe(
         () => this.loadAll(),
         error => MaterializeService.showToastMessage(this.retrieveErrorMessage(error)));
   }
 
   removeById(id: string): void {
-    this.httClient.delete(`${this.baseUrl}remove/${id}`)
+    this.httClient.delete(`${this.baseUrl}/${id}`)
       .subscribe(
         () => this.loadAll(),
         error => MaterializeService.showToastMessage(this.retrieveErrorMessage(error)));

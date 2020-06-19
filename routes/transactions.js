@@ -10,8 +10,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage }).single('transactionsFile');
 
 
-router.get('/all', controller.getAll);
-router.post('/save', upload, controller.save);
-router.delete('/remove/:id', controller.removeById);
+router.get('/', controller.getAll);
+router.post('/', upload, controller.save);
+router.delete('/:id', controller.removeById);
 
 module.exports = router;
