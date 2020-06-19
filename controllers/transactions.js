@@ -3,30 +3,22 @@ const { ObjectId } = require('mongodb');
 const fs = require('fs');
 const path = require('path');
 
-const { dbName, collectionName } = require('../config');
-const { composeResponseMessage, getMongoClient } = require('../utils');
+const { collectionName } = require('../config');
+const { composeResponseMessage } = require('../utils');
 const filePath = path.resolve(__dirname, '../transactions.csv');
 
 const getAll = async (req, res) => {
-    const client = getMongoClient();
-
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const transactions = db.collection(collectionName).find();
+        const transactions = req.db.collection(collectionName).find();
 
         res.status(200).json(await transactions.toArray());
     } catch (e) {
         console.error(e);
         res.status(500).json(composeResponseMessage('Error during retrieving of transactions'));
-    } finally {
-        await client.close();
     }
 };
 
 const save = async (req, res) => {
-    const client = getMongoClient();
-
     try {
         const transactions = [];
 
@@ -34,9 +26,7 @@ const save = async (req, res) => {
             .pipe(csvParser())
             .on('data', (data) => transactions.push(data))
             .on('end', async () => {
-                await client.connect();
-                const db = client.db(dbName);
-                await db.collection(collectionName).insertMany(transactions);
+                await req.db.collection(collectionName).insertMany(transactions);
 
                 res.status(200).json(composeResponseMessage('All transactions have been successfully saved'));
             });
@@ -44,26 +34,19 @@ const save = async (req, res) => {
         console.error(e);
         res.status(500).json(composeResponseMessage('Error during saving of transactions'));
     } finally {
-        await client.close();
         fs.unlink(filePath, () => {});
     }
 };
 
 const removeById = async (req, res) => {
-    const client = getMongoClient();
-
     try {
         const { id } = req.params;
-        await client.connect();
-        const db = client.db(dbName);
-        await db.collection(collectionName).deleteOne({ _id: ObjectId(id) });
+        await req.db.collection(collectionName).deleteOne({ _id: ObjectId(id) });
 
         res.status(200).json(composeResponseMessage('The transaction has been successfully removed'));
     } catch (e) {
         console.error(e);
         res.status(500).json(composeResponseMessage('Error during deleting of transaction'));
-    } finally {
-        await client.close();
     }
 };
 
