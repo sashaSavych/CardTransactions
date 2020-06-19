@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 
 const { collectionName } = require('../config');
-const { composeResponseMessage } = require('../utils');
 const filePath = path.resolve(__dirname, '../transactions.csv');
 
 const getAll = async (req, res) => {
@@ -49,5 +48,7 @@ const removeById = async (req, res) => {
         res.status(500).json(composeResponseMessage('Error during deleting of transaction'));
     }
 };
+
+const composeResponseMessage = (message) => ({ message });
 
 module.exports = { getAll, save, removeById };

@@ -5,3 +5,7 @@ export interface Transaction {
   datetime: string;
   amount: number;
 }
+
+export interface ResponseMessage {
+  message: string;
+}

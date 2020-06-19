@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Transaction } from '../models/interfaces';
+import { ResponseMessage, Transaction } from '../models/interfaces';
 import { MaterializeService } from './materialize.service';
 
 @Injectable({
@@ -27,16 +27,22 @@ export class TransactionsService {
     const formData: FormData = new FormData();
     formData.append('transactionsFile', fileToUpload, fileToUpload.name);
 
-    this.httClient.post(this.baseUrl, formData, { headers })
+    this.httClient.post<ResponseMessage>(this.baseUrl, formData, { headers })
       .subscribe(
-        () => this.loadAll(),
-        error => MaterializeService.showToastMessage(this.retrieveErrorMessage(error)));
+        ({ message }) => {
+          MaterializeService.showToastMessage(message);
+          this.loadAll();
+        },
+          error => MaterializeService.showToastMessage(this.retrieveErrorMessage(error)));
   }
 
   removeById(id: string): void {
-    this.httClient.delete(`${this.baseUrl}/${id}`)
+    this.httClient.delete<ResponseMessage>(`${this.baseUrl}/${id}`)
       .subscribe(
-        () => this.loadAll(),
+        ({ message }) => {
+          MaterializeService.showToastMessage(message);
+          this.loadAll();
+        },
         error => MaterializeService.showToastMessage(this.retrieveErrorMessage(error)));
   }
 
