@@ -7,6 +7,6 @@ declare var M;
 })
 export class MaterializeService {
   static showToastMessage(message: string): void {
-    M.toast({html: message})
+    M.toast({html: message});
   }
 }
