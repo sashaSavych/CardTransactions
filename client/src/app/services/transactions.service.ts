@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, of} from 'rxjs';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { ResponseMessage, Transaction } from '../models/interfaces';
 import { MaterializeService } from './materialize.service';
+import {catchError} from 'rxjs/operators';
+import {defaultTransactions} from '../app.mock';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +17,9 @@ export class TransactionsService {
 
   loadAll(): void {
     this.httClient.get<Transaction[]>(this.baseUrl)
+      .pipe(
+        catchError(() => of(defaultTransactions))
+      )
       .subscribe(
         transactions => this.transactions$.next(transactions),
         error => MaterializeService.showToastMessage(this.retrieveErrorMessage(error)));
